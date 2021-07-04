@@ -23,12 +23,23 @@ const userSchema = new Schema({
         trim: true,
         unique: true
     },
+    email: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    rol: {
+        type: String,
+        required: true,
+        trim: true,
+        default: "Estudiante",
+    },
     password:{
         type: String,
         required: true,
         trim: true
     },
-    isAdmin: { type: Boolean, default: false, required: true },
+    isAdmin: { type: Boolean, default: false },
 }, { timestamps: true } );
 
 //encriptar

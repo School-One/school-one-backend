@@ -8,7 +8,7 @@ const User = require('../Models/User');
 
 userRegister.registerUser = async(req, res) =>{
 
-    const { name, lastname, username, cellphone, password, confirmPassword } = req.body;
+    const { name, lastname, username, cellphone, email, rol, password, confirmPassword } = req.body;
 
     const user = await User.findOne({username});
 
@@ -22,6 +22,8 @@ userRegister.registerUser = async(req, res) =>{
             newUser.lastname = lastname;
             newUser.username = username;
             newUser.cellphone = cellphone;
+            newUser.email = email;
+            newUser.rol = rol;
             newUser.password = newUser.generateHash(password);
 
             const createdUser = await newUser.save();
@@ -32,6 +34,8 @@ userRegister.registerUser = async(req, res) =>{
                 lastname: createdUser.lastname,
                 username: createdUser.username,
                 cellphone: createdUser.cellphone,
+                email: createdUser.email,
+                rol: createdUser.rol,
                 isAdmin: createdUser.isAdmin,
             }, process.env.JWT_SECRET || 'something secret',{expiresIn:'1h'})
 
