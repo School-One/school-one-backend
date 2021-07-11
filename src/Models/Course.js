@@ -6,19 +6,23 @@ const courseSchema = new Schema({
         required: true,
         unique: true,
     },
-    teacherid: {
+    grade_section: {
+        type: String,
+        required: true,
+    },
+    teacher: {
         type: Schema.Types.ObjectId,
         ref: 'Teacher',
         required: true,
     },
-    teacherDetails: [
-        {
-            name: { type: String, required:true },
-            lastname: { type: String, required: true },
-            email: { type: String, required: true },
-            cellphone: { type: Number, required: true },
-        }
-    ],
+    // teacherDetails: [
+    //     {
+    //         name: { type: String, required:true },
+    //         lastname: { type: String, required: true },
+    //         email: { type: String, required: true },
+    //         cellphone: { type: Number, required: true },
+    //     }
+    // ],
     students: [
         {
             _id: { type: String, required: true, unique: true },

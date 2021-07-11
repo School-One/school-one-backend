@@ -23,16 +23,13 @@ courseCtrl.getCourseForAlumn = async(req, res) =>{
 
     try {
         
-        const course = await Course.find({ 'students._id': req.params.studentid });
+        //const course = await Course.find({ 'students._id': req.params.studentid });
 
-        // await Course.find({'students._id': req.params.studentid}, function (err, course) {
-        //     User.populate(course, {path: 'teacher'}, function (err, course) {
-        //         res.status(200).send(course);
-        //     });
-        // });
-
-        res.send(course);
-
+        await Course.find({'students._id': req.params.studentid}, function (err, course) {
+            User.populate(course, {path: 'teacher'}, function (err, course) {
+                res.json(course);
+             });
+        });
 
     } catch (error) {
         res.send(error);
@@ -60,8 +57,9 @@ courseCtrl.createCourse = async(req, res) => {
 
     const course = new Course({
         name: req.body.name,
-        teacherid: req.body.teacherId,
-        teacherDetails: req.body.teacherDetails,
+        grade_section: req.body.grade_section,
+        teacher: req.body.teacher,
+        //teacherDetails: req.body.teacherDetails,
         students: req.body.students,
     });
 
