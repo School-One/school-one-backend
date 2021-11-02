@@ -1,5 +1,6 @@
 const Course = require('../../Models/Courses');
 const User = require('../../Models/Users');
+const checkAuth = require('../../Util/check_auth');
 
 module.exports = {
 
@@ -41,6 +42,30 @@ module.exports = {
             }
 
         },
+        async getCourse(_, { courseId }, context) {
+
+            try {
+                
+                const student = checkAuth(context);
+
+                if(!student) {
+                    throw new Error('No se encuentra disponible')
+                }
+
+                const course = await Course.findOne({
+                    $and: [
+                        {'_id': courseId},
+                        {'students.student_id': student.id}
+                    ]
+                });
+
+                return course;
+
+            } catch (err) {
+                throw new Error(err);
+            }
+
+        }
 
     },
     Mutation: {
@@ -51,11 +76,18 @@ module.exports = {
             teacherId
          }) {
 
+            const teacher = await User.findById(teacherId);
+
             const newCourse = new Course({
 
                 name,
                 grade_section,
-                teacher_id: teacherId 
+                teacher: {
+                    teacher_id: teacher.id,
+                    name: teacher.name,
+                    email: teacher.email,
+                    cellphone: teacher.cellphone,
+                }
 
             });
 

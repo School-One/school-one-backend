@@ -33,12 +33,19 @@ module.exports = gql`
 
     }
 
+    type Teacher {
+        teacher_id: ID!
+        name: String!
+        email: String!
+        cellphone: Int!
+    }
+
     type Course {
 
         id: ID!
         name: String!
         grade_section: ID!
-        teacher_id: ID!
+        teacher: Teacher
         students: [Student!]
 
     }
@@ -94,6 +101,7 @@ module.exports = gql`
         getUsers: [User]
         getUser(userId: ID!): User
         getCourses(userId: ID!): [Course]
+        getCourse(courseId: ID!): Course
         getGrades: [Grade]
         getHomeworks(courseId: ID!, userId: ID!): [Homework]
 
@@ -102,7 +110,7 @@ module.exports = gql`
     type Mutation {
 
         login(email: String!, password: String!): User
-        registerUser(name: String!, lastname: String!, username: String!, cellphone: Int!, email: String!, rol: String!, password: String!, confirmPassword: String! ): User
+        registerUser(name: String!, lastname: String!, cellphone: Int!, email: String!, rol: String!, password: String!, confirmPassword: String! ): User
         updateUser(userId: ID!, name: String!, lastname: String!, email: String!): User
         deleteUser(userId: ID!): String
         createGrade(grade: String!, section: String!, teacherId: String!): Grade!
