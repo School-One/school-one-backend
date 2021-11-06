@@ -9,12 +9,6 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    username:{
-        type: String,
-        required: true,
-        trim: true,
-        unique: true
-    },
     cellphone:{
         type: Number,
         required: true,

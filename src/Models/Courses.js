@@ -11,10 +11,13 @@ const courseSchema = new Schema({
         ref: 'Grades',
         required: true,
     },
-    teacher_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'Users',
-        required: true,
+    teacher: {
+        _id: false,
+        teacher_id: { type: Schema.Types.ObjectId, ref: 'User' },
+        name: { type: String },
+        email: { type: String },
+        cellphone: { type: Number },
+
     },
     students: [
         {

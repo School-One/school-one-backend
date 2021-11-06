@@ -15,7 +15,6 @@ function generateToken(user) {
             lastname: user.lastname,
             email: user.email,
             cellphone: user.cellphone,
-            username: user.username
         },
         SECRET_KEY,
         {
@@ -102,8 +101,7 @@ module.exports = {
 
         async registerUser(_, { 
             name, 
-            lastname, 
-            username, 
+            lastname,
             cellphone, 
             email, 
             rol, 
@@ -111,7 +109,7 @@ module.exports = {
             confirmPassword 
         }) {
 
-            const { valid, errors } = validateRegisterInput(username, email, password, confirmPassword);
+            const { valid, errors } = validateRegisterInput(email, password, confirmPassword);
 
             if(!valid) {
                 throw new UserInputError('Errors', {errors});
@@ -130,7 +128,6 @@ module.exports = {
             const newUser = new User({
                 name,
                 lastname,
-                username,
                 cellphone,
                 email,
                 rol,

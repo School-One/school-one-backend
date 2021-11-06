@@ -1,6 +1,9 @@
 const Homework = require('../../Models/Homework');
+const Course = require('../../Models/Courses');
+const Reminder = require('../../Models/Reminders');
 const checkAuth = require('../../Util/check_auth');
 const { UserInputError } = require('apollo-server');
+const { findById } = require('../../Models/Reminders');
 
 module.exports = {
 
@@ -33,7 +36,7 @@ module.exports = {
 
     Mutation: {
 
-        async createHomework(_, { courseId, title, content }, context) {
+        async createHomework(_, { courseId, title, content, endDate }, context) {
 
             const user = checkAuth(context);
 
@@ -53,6 +56,19 @@ module.exports = {
             });
 
             const res = await newHomework.save();
+
+            const course = await findById(course_id);
+
+            if(res) {
+                const newReminder = new Reminder({
+                    homework_id: res.id,
+                    title: res.title,
+                    endDate: endDate,
+                    students: course.students,
+                });
+                
+                await newReminder.save();
+            }
 
             return res;
 
