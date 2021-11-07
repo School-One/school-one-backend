@@ -9,12 +9,17 @@ module.exports = {
 
     Date: dateResolver,
 
+    Homework: {
+        answerCount: (parent) => parent.answers.length,
+    },
+
     Query: {
 
         ...userResolvers.Query,
         ...courseResolvers.Query,
         ...gradeResolvers.Query,
         ...homeworkResolvers.Query,
+        ...eventResolvers.Query
 
     },
 

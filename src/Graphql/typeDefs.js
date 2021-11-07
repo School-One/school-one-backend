@@ -78,6 +78,7 @@ module.exports = gql`
         title: String!
         content: String!
         answers: [Answer]
+        answerCount: Int!
 
     }
 
@@ -104,6 +105,8 @@ module.exports = gql`
         getCourse(courseId: ID!): Course
         getGrades: [Grade]
         getHomeworks(courseId: ID!, userId: ID!): [Homework]
+        getHomework(courseId: ID!, homeworkId: ID!): Homework
+        getEvents(start: Date!, end: Date!): [Event]
 
     }
 
@@ -116,7 +119,7 @@ module.exports = gql`
         createGrade(grade: String!, section: String!, teacherId: String!): Grade!
         createHomework(courseId: ID!, title: String!, content: String!): Homework
         answerHomework(homeworkId: ID!, studentAnswer: String!): String
-        createEvent(title: String!): Event
+        createEvent(title: String!, start: Date, end: Date): Event
         createCourse(name: String!, grade_section: ID!, teacherId: ID!): Course
         insertStudents(courseId: ID!, studentId: ID!): String!
 

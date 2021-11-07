@@ -28,10 +28,26 @@ module.exports = {
 
             }
 
+        },
+        async getHomework(_, { courseId, homeworkId }){
+
+            try {
+                
+                const course = await Course.findById(courseId);
+
+                if(course) {
+
+                    const homework = await Homework.findById(homeworkId);
+
+                    return homework;
+
+                }
+
+            } catch (err) {
+                throw new Error(err);
+            }
+
         }
-
-
-
     },
 
     Mutation: {
@@ -40,7 +56,7 @@ module.exports = {
 
             const user = checkAuth(context);
 
-            if(!user.rol == "Profesor") {
+            if(!user.rol === "Profesor") {
 
                 throw new Error('No puedes crear tareas porque no eres el profesor!');
 
@@ -57,7 +73,7 @@ module.exports = {
 
             const res = await newHomework.save();
 
-            const course = await findById(course_id);
+            const course = await Course.findById(courseId);
 
             if(res) {
                 const newReminder = new Reminder({
