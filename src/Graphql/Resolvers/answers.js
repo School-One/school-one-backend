@@ -6,7 +6,7 @@ module.exports = {
 
     Query: {
 
-        async getAnswers(_, { page },context){
+        async getAnswers(_, { page, homeworkId },context){
             
             const user = checkAuth(context);
 
@@ -18,7 +18,7 @@ module.exports = {
                     throw new Error('No estas permitido a hacer esto');
                 }
 
-                const answers = await Answer.find()
+                const answers = await Answer.find({'homework': homeworkId})
                     .limit(limit * 1)
                     .skip((page - 1) * limit);
 

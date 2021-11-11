@@ -119,7 +119,7 @@ module.exports = gql`
         getHomework(courseId: ID!, homeworkId: ID!): Homework
         getEvents(start: Date!, end: Date!): [Event]
         getReminders(studentId: ID!): [Reminder]
-        getAnswers(page: Int!): [Answer]
+        getAnswers(page: Int!, homeworkId: ID!): [Answer]
 
     }
 
