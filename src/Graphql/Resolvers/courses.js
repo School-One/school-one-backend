@@ -1,6 +1,8 @@
 const Course = require('../../Models/Courses');
 const User = require('../../Models/Users');
 const checkAuth = require('../../Util/check_auth');
+const Homework = require('../../Models/Homework');
+const Reminder = require('../../Models/Reminders');
 
 module.exports = {
 
@@ -46,20 +48,40 @@ module.exports = {
 
             try {
                 
-                const student = checkAuth(context);
+                const user = checkAuth(context);
 
-                if(!student) {
+                if(!user) {
                     throw new Error('No se encuentra disponible')
                 }
 
-                const course = await Course.findOne({
-                    $and: [
-                        {'_id': courseId},
-                        {'students.student_id': student.id}
-                    ]
-                });
+                let course = {};
 
-                return course;
+                switch (user.rol) {
+                    case 'Estudiante':
+                        
+                        course = await Course.findOne({
+                            $and: [
+                                {'_id': courseId},
+                                {'students.student_id': user.id}
+                            ]
+                        });
+
+                        return course;
+                
+                    case 'Profesor':
+
+                        course = await Course.findOne({
+                            $and: [
+                                {'_id': courseId},
+                                {'teacher.teacher_id': user.id}
+                            ]
+                        });
+
+                        return course;
+
+                    default:
+                        return {};
+                }
 
             } catch (err) {
                 throw new Error(err);
@@ -96,6 +118,26 @@ module.exports = {
             return course;
 
         },
+
+        async deleteCourse(_, { courseId }){
+            try {
+
+                const courseDeleted = await Course.findOneAndRemove(courseId);
+
+                if(courseDeleted) {
+
+                    await Homework.remove({'curse_id': courseId});
+
+                    await Reminder.remove({'course_id': courseId});
+
+                    return 'Curso borrado correctamente';
+                }
+
+            } catch (err) {
+                throw new Error(err);
+            }
+        },
+
         async insertStudents(_,{
             courseId
             ,studentId

@@ -4,6 +4,8 @@ const gradeResolvers = require('./grades');
 const homeworkResolvers = require('./homeworks');
 const eventResolvers = require('./events');
 const dateResolver = require('./date');
+const reminderResolvers = require('./reminders');
+const answerResolvers = require('./answers');
 
 module.exports = {
 
@@ -19,7 +21,9 @@ module.exports = {
         ...courseResolvers.Query,
         ...gradeResolvers.Query,
         ...homeworkResolvers.Query,
-        ...eventResolvers.Query
+        ...eventResolvers.Query,
+        ...reminderResolvers.Query,
+        ...answerResolvers.Query,
 
     },
 
@@ -30,6 +34,7 @@ module.exports = {
         ...gradeResolvers.Mutation,
         ...homeworkResolvers.Mutation,
         ...eventResolvers.Mutation,
+        ...answerResolvers.Mutation,
         
     }
 

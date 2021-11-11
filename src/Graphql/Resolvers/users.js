@@ -15,6 +15,7 @@ function generateToken(user) {
             lastname: user.lastname,
             email: user.email,
             cellphone: user.cellphone,
+            rol: user.rol,
         },
         SECRET_KEY,
         {
@@ -43,7 +44,7 @@ module.exports = {
 
         },
 
-        async getUser(_, { userId }) {
+        async getUser(_, { userId }, context) {
 
             try {
                 

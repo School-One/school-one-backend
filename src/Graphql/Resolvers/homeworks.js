@@ -1,9 +1,10 @@
 const Homework = require('../../Models/Homework');
 const Course = require('../../Models/Courses');
 const Reminder = require('../../Models/Reminders');
+const Answer = require('../../Models/Answer');
 const checkAuth = require('../../Util/check_auth');
 const { UserInputError } = require('apollo-server');
-const { findById } = require('../../Models/Reminders');
+const moment = require('moment');
 
 module.exports = {
 
@@ -12,16 +13,32 @@ module.exports = {
         async getHomeworks(_, { courseId, userId }) {
 
             try {
-                
-                const homeworks = await Homework.find({
+
+                const course = await Course.find({
                     $and: [
-                        {"curse_id": courseId},
-                        {"createdBy": userId}
+                        {'_id': courseId},
+                        {'students._id': userId}
                     ]
-                });
+                })
 
-                return homeworks;
+                if(course) {
 
+                    let homeworks;
+
+                    const answers = await Answer.find();
+
+                    if(answers){
+                        await Homework.find({"curse_id": courseId})
+                        .populate('answers').then(p => {
+                            homeworks = p;
+                        });
+                    }else {
+                        homeworks = await find({"curse_id": courseId});
+                    }
+
+                    return homeworks;
+                }
+                
             } catch (err) {
                 
                 throw new Error(err);
@@ -48,11 +65,12 @@ module.exports = {
             }
 
         }
+
     },
 
     Mutation: {
 
-        async createHomework(_, { courseId, title, content, endDate }, context) {
+        async createHomework(_, { courseId, title, content, startDate }, context) {
 
             const user = checkAuth(context);
 
@@ -78,8 +96,9 @@ module.exports = {
             if(res) {
                 const newReminder = new Reminder({
                     homework_id: res.id,
+                    course_id: res.curse_id,
                     title: res.title,
-                    endDate: endDate,
+                    startDate: moment(new Date()).toDate(),
                     students: course.students,
                 });
                 
@@ -89,6 +108,18 @@ module.exports = {
             return res;
 
         },
+
+        // async deleteHomework(_, { courseId }) {
+
+        //     try {
+                
+                
+
+        //     } catch (err) {
+        //         throw new Error(err);
+        //     }
+
+        // },
 
         async answerHomework(_, { homeworkId, studentAnswer }, context) {
 
@@ -100,13 +131,24 @@ module.exports = {
 
                 if(homework){
 
-                    homework.answers.unshift({
+                    const answer = new Answer({
+                        homework: homework.id,
                         student_id: user.id,
                         student_answer: studentAnswer,
-                        submitAt: new Date().toISOString(),
+                        submitAt: moment(new Date()).toDate(),
                     });
 
-                    await homework.save();
+                    const answerCreated = await answer.save();
+
+                    let answerId = answerCreated.id;
+
+                    if(answerCreated) {
+                        homework.answers.unshift(
+                            answerId
+                        );
+    
+                        await homework.save();
+                    }
 
                     return 'Respondido correctamente';
 
@@ -116,7 +158,7 @@ module.exports = {
                 
             }
 
-        }
+        },
 
     }
 

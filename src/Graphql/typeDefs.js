@@ -83,10 +83,21 @@ module.exports = gql`
     }
 
     type Answer {
-        
+
+        id: ID!
+        homework: ID!
         student_id: ID!
         student_answer: String!
+        submitAt: Date!
 
+    }
+
+    type Reminder {
+
+        homework_id: ID!
+        course_id: ID!
+        title: String!
+        startDate: Date!
     }
 
     input registerInput {
@@ -107,6 +118,8 @@ module.exports = gql`
         getHomeworks(courseId: ID!, userId: ID!): [Homework]
         getHomework(courseId: ID!, homeworkId: ID!): Homework
         getEvents(start: Date!, end: Date!): [Event]
+        getReminders(studentId: ID!): [Reminder]
+        getAnswers(page: Int!): [Answer]
 
     }
 
@@ -119,9 +132,11 @@ module.exports = gql`
         createGrade(grade: String!, section: String!, teacherId: String!): Grade!
         createHomework(courseId: ID!, title: String!, content: String!): Homework
         answerHomework(homeworkId: ID!, studentAnswer: String!): String
-        createEvent(title: String!, start: Date, end: Date): Event
+        createEvent(title: String!, start: Date!, end: Date!): Event
         createCourse(name: String!, grade_section: ID!, teacherId: ID!): Course
+        deleteCourse(courseId: ID!): String!
         insertStudents(courseId: ID!, studentId: ID!): String!
+        deleteAnswer(answerId:ID!, homeworkId: ID!): String
 
     }
 

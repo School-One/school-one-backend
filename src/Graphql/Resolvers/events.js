@@ -23,12 +23,10 @@ module.exports = {
         async createEvent(_, { title, start, end }) {
 
             const event = new Event({
-                start: new Date(),
-                end: new Date(),
+                start: moment(new Date()).toDate(),
+                end: moment(new Date()).toDate(),
                 title: title
             });
-
-            console.log((event.start).toUTCString());
 
             await event.save();
 
